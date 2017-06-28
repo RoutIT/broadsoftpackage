@@ -9,4 +9,4 @@ composer require jvleeuwen/broadsoft:"dev-master"
 
 
 ## README.md
-This file will continue to grow with features developt and implemented
+This file will continue to grow with features developt and implemented.
