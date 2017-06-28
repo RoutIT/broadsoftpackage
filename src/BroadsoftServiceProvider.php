@@ -16,12 +16,7 @@ class BroadsoftServiceProvider extends ServiceProvider
     {
         include __DIR__.'/Routes/routes.php';
         $this->loadViewsFrom(__DIR__.'/Views', 'broadsoft');
-        // $this->publishes([__DIR__.'/Config/pusher.php' => config_path('pusher.php'),]);
-        $this->publishes([
-            __DIR__.'/Assets' => base_path('resources/assets/js/broadsoft.js'),
-            // __DIR__.'/Assets/js/components/CallCenterAgents.vue' => base_path('resources/assets/js/brcomponentscomponentsoadsoft.js'),
-            // __DIR__.'/Assets/js/components/CallCenterAgents.vue' => base_path('resources/assets/js/components/CallCenterAgents.vue'),
-        ]);
+        $this->publishes([__DIR__.'/Assets' => base_path('resources/assets/js/broadsoft.js'),]);
     }
 
     /**
