@@ -12,6 +12,10 @@ Add the serviceProvider to your config/app.php
 jvleeuwen\broadsoft\BroadsoftServiceProvider::class,
 ```
 
+Add this line to webpack.mix.js in the root folder just below the first .js entry
+```
+.js('resources/assets/js/broadsoft.js', 'public/js')
+```
 
 ## README.md
 This file will continue to grow with features developt and implemented.
