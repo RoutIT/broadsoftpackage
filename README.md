@@ -34,7 +34,33 @@ PUSHER_APP_KEY=app_key
 PUSHER_APP_SECRET=app_secret
 ```
 
+## Enable laravel-echo with pusher
+Edit the resource/assets/js/bootstrap.js file\
+from:
+```
+// import Echo from 'laravel-echo'
 
+// window.Pusher = require('pusher-js');
+
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: 'your-pusher-key'
+// });
+```
+to:
+```
+import Echo from 'laravel-echo'
+
+window.Pusher = require('pusher-js');
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: 'enter-the-pusher-app-key-here',
+    cluster: 'eu',
+    encrypted: true
+
+});
+```
 
 ## README.md
 This file will continue to grow with features developt and implemented.
