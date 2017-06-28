@@ -7,6 +7,11 @@ composer require jvleeuwen/broadsoft:"dev-master"
 ```
 \* This installs the latest development release and is not ready for production usage !
 
+Add the serviceProvider to your config/app.php
+```php
+jvleeuwen\broadsoft\BroadsoftServiceProvider::class,
+```
+
 
 ## README.md
 This file will continue to grow with features developt and implemented.
