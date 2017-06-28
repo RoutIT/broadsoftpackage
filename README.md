@@ -1,7 +1,12 @@
-# broadsoftpackage
-Broadsoft package for laravel
+# Broadsoft package
+Broadsoft package for laravel  5.4
 
-This package is still in development fase.
+## To install this  package use:
+```bash
+composer require jvleeuwen/broadsoft:"dev-master"
+```
+\* This installs the latest development release and is not ready for production usage !
 
 
-Once there is a first release code will be updated
+## README.md
+This file will continue to grow with features developt and implemented
