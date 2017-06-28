@@ -30,7 +30,7 @@ class BroadsoftServiceProvider extends ServiceProvider
         $this->app->make('jvleeuwen\broadsoft\CallCenterAgentController');
         $this->app->make('jvleeuwen\broadsoft\AdvancedCallController');
         $this->app->make('jvleeuwen\broadsoft\Controllers\ExampleController');
-        $this->app->register('Vinkla\Pusher\PusherServiceProvider');
+        // $this->app->register('Vinkla\Pusher\PusherServiceProvider');
 
         // $loader = \Illuminate\Foundation\AliasLoader::getInstance();
     }
