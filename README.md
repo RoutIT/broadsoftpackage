@@ -7,9 +7,10 @@ composer require jvleeuwen/broadsoft:"dev-master"
 ```
 \* This installs the latest development release and is not ready for production usage !
 
-Add the serviceProvider to your config/app.php
+Add the serviceProvider to your config/app.php, and enable the BroadcastServiceProvider
 ```php
 jvleeuwen\broadsoft\BroadsoftServiceProvider::class,
+App\Providers\BroadcastServiceProvider::class,
 ```
 
 ## Configure laravel-mix
