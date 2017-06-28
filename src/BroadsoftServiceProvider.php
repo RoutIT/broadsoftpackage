@@ -14,9 +14,9 @@ class BroadsoftServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        include __DIR__.'/../Routes/routes.php';
-        $this->loadViewsFrom(__DIR__.'/../Views', 'broadsoft');
-        $this->publishes([__DIR__.'/../Config/pusher.php' => config_path('pusher.php'),]);
+        include __DIR__.'/Routes/routes.php';
+        $this->loadViewsFrom(__DIR__.'/Views', 'broadsoft');
+        $this->publishes([__DIR__.'/Config/pusher.php' => config_path('pusher.php'),]);
     }
 
     /**
