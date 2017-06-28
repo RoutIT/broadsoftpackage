@@ -12,6 +12,8 @@
         "pusher/pusher-php-server": "^2.6"
     },
     "autoload": {
-        "psr-4": {"jvleeuwen\\broadsoft\\": "src/"}
+        "psr-4": {
+        "Jvleeuwen\\Broadsoft\\": "src/"
+        }
     }
 }
