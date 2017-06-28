@@ -24,7 +24,7 @@ npm install && npm run dev
 
 ## Enter pusher details in the .env file
 First u need to create an app on pusher.com
-\After creating he app the needed credentials shown below will be available:
+\ After creating he app the needed credentials shown below will be available:
 
 ```
 PUSHER_APP_ID=app_id
