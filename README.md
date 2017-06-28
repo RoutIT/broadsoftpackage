@@ -20,7 +20,7 @@ Add this line to webpack.mix.js in the root folder just below the first .js entr
 ```
 ## Install NPM tools required for laravel-mix
 ```
-npm install && npm run dev
+npm install && npm install --save laravel-echo pusher-js && npm run dev
 ```
 
 ## Enter pusher details in the .env file
