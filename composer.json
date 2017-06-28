@@ -1,0 +1,14 @@
+{
+    "name": "jvleeuwen/broadsoft",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jelle van Leeuwen",
+            "email": "info@jellevl.nl"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "pusher/pusher-php-server": "^2.6"
+    },
+}

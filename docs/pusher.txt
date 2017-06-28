@@ -1,0 +1,11 @@
+PUSHER instellingen vermelden in package readme
+app_id = "*****"
+key = "*****"
+secret = "*****"
+
+
+in config/broadcasting:
+'options' => [
+    'cluster' => 'eu',
+    'encrypted' => true
+],
