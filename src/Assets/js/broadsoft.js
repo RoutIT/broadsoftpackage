@@ -15,7 +15,9 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('callcenteragents', require('./components/CallCenterAgents.vue'));
+Vue.component('debugcallcenteragent', require('./components/debug/CallCenterAgent.vue'));
+Vue.component('debugcallcenterqueue', require('./components/debug/CallCenterQueue.vue'));
+Vue.component('debugadvancedcall', require('./components/debug/AdvancedCall.vue'));
 
 const app = new Vue({
     el: '#bs',

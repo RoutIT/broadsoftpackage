@@ -10,7 +10,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class AdvancedCallEvent implements ShouldBroadcast
+class CallCenterQueueEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -35,11 +35,11 @@ class AdvancedCallEvent implements ShouldBroadcast
 
     public function broadcastAS()
     {
-        return 'AdvancedCallEvent';
+        return 'CallCenterQueueEvent';
     }
 
     public function broadcastOn()
     {
-        return new Channel('AdvancedCall');
+        return new Channel('CallCenterQueue');
     }
 }

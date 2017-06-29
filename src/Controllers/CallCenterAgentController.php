@@ -6,17 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use jvleeuwen\broadsoft\CallCenterAgentEvent;
 
-
-
 class CallCenterAgentController extends Controller
 {
-
-    public function TestPage()
-    {
-        return view('broadsoft::callcenteragent');
-    }
-
-
     /*
         Handle incomming XML messages for the Call Center Agent
     */
@@ -55,11 +46,30 @@ class CallCenterAgentController extends Controller
     }
 
     /*
-        Parse the Agent State Events
+        Parse ACD Agent Join Update Events
+    */
+    protected function ACDAgentJoinUpdateEvent($xml)
+    {
+        $ACDAgentJoinUpdateEvent = array(
+            "eventType" => (string)"ACDAgentJoinUpdateEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "acdUserId" => (string)$xml->eventData->ccAgentJoinUpdateData->joinInfo->acdUserId,
+            "skillLevel" => (int)$xml->eventData->ccAgentJoinUpdateData->joinInfo->skillLevel,
+        );
+        event(new Events\CallCenterAgentEvent($ACDAgentJoinUpdateEvent));
+        return Null;
+    }
+
+    /*
+        Parse Agent State Events
     */
     protected function AgentStateEvent($xml)
     {
         $AgentStateEvent = array(
+            "eventType" => (string)"AgentStateEvent",
             "eventID" => (string)$xml->eventID,
             "sequenceNumber" => (int)$xml->sequenceNumber,
             "subscriptionId" => (string)$xml->subscriptionId,
@@ -71,22 +81,53 @@ class CallCenterAgentController extends Controller
             "averageWrapUpTime" => (int)$xml->eventData->agentStateInfo->averageWrapUpTime->value,
         );
         event(new Events\CallCenterAgentEvent($AgentStateEvent));
-        // return json_encode($AgentStateEvent);
         return Null;
     }
 
+    /*
+        Parse Agent Subscription Events
+    */
     protected function AgentSubscriptionEvent($xml)
     {
-        return json_encode($xml);
+        $joins = array(); // create empty array and fill it with parsed joinData
+        $joinInfos = $xml->eventData->joinData->joinInfos; // this is an array that needs to be parsed
+        foreach($joinInfos as $x)
+        {
+            $acdUserId = (string)$x->joinInfo->acdUserId;
+            $skillLevel = (int)$x->joinInfo->skillLevel;
+            array_push($joins, array("acdUserId" => $acdUserId, "skillLevel" => $skillLevel));
+            
+        }
+        $AgentSubscriptionEvent = array(
+            "eventType" => (string)"AgentSubscriptionEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "joinData" => $joins,
+            "state" => (string)$xml->eventData->stateInfo->state,
+            "stateTimestamp" => (int)$xml->eventData->stateInfo->stateTimestamp->value,
+        );
+        event(new Events\CallCenterAgentEvent($AgentSubscriptionEvent));
+        return Null;
     }
-
+    
+    /*
+        Parse Subscription Terminated Events
+    */
     protected function SubscriptionTerminatedEvent($xml)
-    {
-        return json_encode($xml);   
-    }
-
-    protected function ACDAgentJoinUpdateEvent($xml)
-    {
-        return json_encode($xml);  
+    {   
+        $SubscriptionTerminatedEvent = array(
+            "eventType" => (string)"SubscriptionTerminatedEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "userId" => (string)$xml->userId,
+            "externalApplicationId" => (string)$xml->externalApplicationId,
+            "targetId" => (string)$xml->targetId,
+            "httpContactUri" => (string)$xml->httpContact->uri,
+        );
+        event(new Events\CallCenterAgentEvent($SubscriptionTerminatedEvent));
+        return Null;
     }
 }

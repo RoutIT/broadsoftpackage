@@ -41,6 +41,6 @@ class CallCenterAgentEvent implements ShouldBroadcast
     public function broadcastOn()
     {
         // return new PrivateChannel('AgentState');
-        return new Channel('AgentState');
+        return new Channel('CallCenterAgent');
     }
 }

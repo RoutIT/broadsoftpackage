@@ -1,9 +1,7 @@
-<template>   
-    <table>
-        <tr v-for="msg in messages">
-            <td>{{ msg }}</td>
-        </tr>
-    </table>
+<template>
+    <div>
+        <pre v-for="msg in messages">{{msg}}</pre> 
+    </div>
 </template>
 
 
@@ -15,6 +13,14 @@ export default {
             messages: [],
         }
     },
+    filters: {
+        pretty: function(value) {
+            if(value)
+                return JSON.stringify(value, undefined, 2).trim();
+            else
+                return value;
+        }
+    },
     methods:{
         listen(){
             console.log('pusher client ready to receive messages!');
@@ -24,9 +30,10 @@ export default {
         }
     },
     mounted(){
-        Echo.channel('AgentState')
+        Echo.channel('CallCenterAgent')
                 .listen('.CallCenterAgentEvent', (e) => {
-                    this.messages.push(e.message);
+                    this.messages.unshift(e.message);
+                    this.messages = this.messages.slice(0,25);
                 });
     }
 }

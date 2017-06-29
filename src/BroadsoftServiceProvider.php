@@ -16,11 +16,11 @@ class BroadsoftServiceProvider extends ServiceProvider
     {
         include __DIR__.'/Routes/routes.php';
         $this->loadViewsFrom(__DIR__.'/Views', 'broadsoft');
-        // $this->publishes([__DIR__.'/Config/pusher.php' => config_path('pusher.php'),]);
         $this->publishes([
             __DIR__.'/Assets/js/broadsoft.js' => base_path('resources/assets/js/broadsoft.js'),
-            __DIR__.'/Assets/js/components/CallCenterAgents.vue' => base_path('resources/assets/js/brcomponentscomponentsoadsoft.js'),
+            __DIR__.'/Assets/js/components/CallCenterQueue.vue' => base_path('resources/assets/js/components/CallCenterQueue.js'),
             __DIR__.'/Assets/js/components/CallCenterAgents.vue' => base_path('resources/assets/js/components/CallCenterAgents.vue'),
+            __DIR__.'/Assets/js/components/AdvancedCall.vue' => base_path('resources/assets/js/components/AdvancedCall.vue'),
         ]);
     }
 
@@ -31,14 +31,9 @@ class BroadsoftServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->make('jvleeuwen\broadsoft\BroadsoftController');
         $this->app->make('jvleeuwen\broadsoft\CallCenterAgentController');
+        $this->app->make('jvleeuwen\broadsoft\CallCenterQueueController');
         $this->app->make('jvleeuwen\broadsoft\AdvancedCallController');
-        $this->app->make('jvleeuwen\broadsoft\Controllers\ExampleController');
-
-        
-        // $this->app->register('Vinkla\Pusher\PusherServiceProvider');
-
-        // $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        $this->app->make('jvleeuwen\broadsoft\Controllers\DebugController');
     }
 }
