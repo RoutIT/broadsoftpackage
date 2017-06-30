@@ -1,10 +1,10 @@
 <?php
 
-namespace jvleeuwen\broadsoft;
+namespace jvleeuwen\broadsoft\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use jvleeuwen\broadsoft\CallCenterAgentEvent;
+use jvleeuwen\broadsoft\Events\CallCenterAgentEvent;
 
 class AdvancedCallController extends Controller
 {
@@ -71,7 +71,7 @@ class AdvancedCallController extends Controller
             "answerTime" => (int)$xml->eventData->call->answerTime,
             "allowedRecordingControls" => (string)$xml->eventData->call->allowedRecordingControls
         );
-        event(new Events\AdvancedCallEvent($CallAnsweredEvent));
+        event(new AdvancedCallEvent($CallAnsweredEvent));
         return Null;
     }
 
@@ -112,7 +112,7 @@ class AdvancedCallController extends Controller
             "allowedRecordingControls" => (string)$xml->eventData->call->allowedRecordingControls,
             "callType" => (string)$xml->eventData->call->recordingState
         );
-        event(new Events\AdvancedCallEvent($CallBargedInEvent));
+        event(new AdvancedCallEvent($CallBargedInEvent));
         return Null;
     }
 
@@ -140,7 +140,7 @@ class AdvancedCallController extends Controller
             "appearance" => (int)$xml->eventData->call->appearance,
             "startTime" => (int)$xml->eventData->call->startTime
         );
-        event(new Events\AdvancedCallEvent($CallCollectingEvent));
+        event(new AdvancedCallEvent($CallCollectingEvent));
         return Null;
     }
     
@@ -168,7 +168,7 @@ class AdvancedCallController extends Controller
             "appearance" => (int)$xml->eventData->call->appearance,
             "startTime" => (int)$xml->eventData->call->startTime
         );
-        event(new Events\AdvancedCallEvent($CallForwardedEvent));
+        event(new AdvancedCallEvent($CallForwardedEvent));
         return Null;
     }
 
@@ -208,7 +208,7 @@ class AdvancedCallController extends Controller
             "allowedRecordingControls" => (string)$xml->eventData->call->allowedRecordingControls,
             "recordingState" => (string)$xml->eventData->call->recordingState
         );
-        event(new Events\AdvancedCallEvent($CallHeldEvent));
+        event(new AdvancedCallEvent($CallHeldEvent));
         return Null;
     }
 
@@ -236,7 +236,7 @@ class AdvancedCallController extends Controller
             "appearance" => (int)$xml->eventData->call->appearance,
             "startTime" => (int)$xml->eventData->call->startTime
         );
-        event(new Events\AdvancedCallEvent($CallOriginatedEvent));
+        event(new AdvancedCallEvent($CallOriginatedEvent));
         return Null;
     }
 
@@ -264,7 +264,7 @@ class AdvancedCallController extends Controller
             "appearance" => (int)$xml->eventData->call->appearance,
             "startTime" => (int)$xml->eventData->call->startTime
         );
-        event(new Events\AdvancedCallEvent($CallOriginatingEvent));
+        event(new AdvancedCallEvent($CallOriginatingEvent));
         return Null;
     }
 
@@ -294,7 +294,7 @@ class AdvancedCallController extends Controller
             "answerTime" => (int)$xml->eventData->call->answerTime,
             "allowedRecordingControls" => (string)$xml->eventData->call->allowedRecordingControls
         );
-        event(new Events\AdvancedCallEvent($CallPickedUpEvent));
+        event(new AdvancedCallEvent($CallPickedUpEvent));
         return Null;
     }
 
@@ -348,7 +348,7 @@ class AdvancedCallController extends Controller
             "callingPartyInfoAddress" => (string)$xml->eventData->call->acdCallInfo->callingPartyInfo->address,
             "callingPartyInfoCallType" => (string)$xml->eventData->call->acdCallInfo->callingPartyInfo->callType
         );
-        event(new Events\AdvancedCallEvent($CallReceivedEvent));
+        event(new AdvancedCallEvent($CallReceivedEvent));
         return Null;
     }
 
@@ -385,7 +385,7 @@ class AdvancedCallController extends Controller
             "allowedRecordingControls" => (string)$xml->eventData->call->allowedRecordingControls,
             "recordingState" => (string)$xml->eventData->call->recordingState
         );
-        event(new Events\AdvancedCallEvent($CallRecordingStartedEvent));
+        event(new AdvancedCallEvent($CallRecordingStartedEvent));
         return Null;
     }
 
@@ -421,7 +421,7 @@ class AdvancedCallController extends Controller
             "recordingState" => (string)$xml->eventData->call->recordingState,
             "reason" => (string)$xml->eventData->reason
         );
-        event(new Events\AdvancedCallEvent($CallRecordingStoppedEvent));
+        event(new AdvancedCallEvent($CallRecordingStoppedEvent));
         return Null;
     }
 
@@ -481,7 +481,7 @@ class AdvancedCallController extends Controller
             "targetId" => (string)$xml->targetId,
             "calls" => $calllist
         );
-        event(new Events\AdvancedCallEvent($CallRedirectedEvent));
+        event(new AdvancedCallEvent($CallRedirectedEvent));
         return Null;
     }
 
@@ -511,7 +511,7 @@ class AdvancedCallController extends Controller
             "releaseTime" => (int)$xml->eventData->call->releaseTime,
             "allowedRecordingControls" => (string)$xml->eventData->call->allowedRecordingControls
         );
-        event(new Events\AdvancedCallEvent($CallReleasedEvent));
+        event(new AdvancedCallEvent($CallReleasedEvent));
         return Null;
     }
 
@@ -542,7 +542,7 @@ class AdvancedCallController extends Controller
             "appearance" => (int)$xml->eventData->call->appearance,
             "startTime" => (int)$xml->eventData->call->startTime
         );
-        event(new Events\AdvancedCallEvent($CallReleasingEvent));
+        event(new AdvancedCallEvent($CallReleasingEvent));
         return Null;
     }
 
@@ -582,7 +582,7 @@ class AdvancedCallController extends Controller
             "allowedRecordingControls" => (string)$xml->eventData->call->allowedRecordingControls,
             "recordingState" => (string)$xml->eventData->call->recordingState
         );
-        event(new Events\AdvancedCallEvent($CallRetrievedEvent));
+        event(new AdvancedCallEvent($CallRetrievedEvent));
         return Null;
     }
 
@@ -599,7 +599,7 @@ class AdvancedCallController extends Controller
             "targetId" => (string)$xml->targetId,
             "hookStatus" => (string)$xml->eventData->hookStatus
         );
-        event(new Events\AdvancedCallEvent($CallSubscriptionEvent));
+        event(new AdvancedCallEvent($CallSubscriptionEvent));
         return Null;
     }
 
@@ -628,7 +628,7 @@ class AdvancedCallController extends Controller
             "startTime" => (int)$xml->eventData->call->startTime,
             "answerTime" => (int)$xml->eventData->call->answerTime
         );
-        event(new Events\AdvancedCallEvent($CallTransferredEvent));
+        event(new AdvancedCallEvent($CallTransferredEvent));
         return Null;
     }
 
@@ -656,7 +656,7 @@ class AdvancedCallController extends Controller
             "appearance" => (int)$xml->eventData->call->appearance,
             "startTime" => (int)$xml->eventData->call->startTime
         );
-        event(new Events\AdvancedCallEvent($CallUpdatedEvent));
+        event(new AdvancedCallEvent($CallUpdatedEvent));
         return Null;
     }
 
@@ -675,7 +675,7 @@ class AdvancedCallController extends Controller
             "addressOfRecord" => (string)$xml->eventData->conference->endpoint->addressOfRecord,
             "appearance" => (int)$xml->eventData->conference->appearance
         );
-        event(new Events\AdvancedCallEvent($ConferenceHeldEvent));
+        event(new AdvancedCallEvent($ConferenceHeldEvent));
         return Null;
     }
 
@@ -692,7 +692,7 @@ class AdvancedCallController extends Controller
             "targetId" => (string)$xml->targetId,
             "state" => (string)$xml->eventData->conference->state
         );
-        event(new Events\AdvancedCallEvent($ConferenceReleasedEvent));
+        event(new AdvancedCallEvent($ConferenceReleasedEvent));
         return Null;
     }
 
@@ -721,7 +721,7 @@ class AdvancedCallController extends Controller
             "appearance" => (int)$xml->eventData->conference->appearance,
             "conferenceParticipantList" => $conferenceParticipantList
         );
-        event(new Events\AdvancedCallEvent($ConferenceRetrievedEvent));
+        event(new AdvancedCallEvent($ConferenceRetrievedEvent));
         return Null;
     }
 
@@ -751,7 +751,7 @@ class AdvancedCallController extends Controller
             "conferenceType" => (string)$xml->eventData->conference->conferenceType,
             "conferenceParticipantList" => $conferenceParticipantList
         );
-        event(new Events\AdvancedCallEvent($ConferenceStartedEvent));
+        event(new AdvancedCallEvent($ConferenceStartedEvent));
         return Null;
     }
 
@@ -780,7 +780,7 @@ class AdvancedCallController extends Controller
             "appearance" => (int)$xml->eventData->conference->appearance,
             "conferenceParticipantList" => $conferenceParticipantList
         );
-        event(new Events\AdvancedCallEvent($ConferenceUpdatedEvent));
+        event(new AdvancedCallEvent($ConferenceUpdatedEvent));
         return Null;
     }
 
@@ -797,7 +797,7 @@ class AdvancedCallController extends Controller
             "targetId" => (string)$xml->targetId,
             "state" => (string)$xml->eventData->hookStatus
         );
-        event(new Events\AdvancedCallEvent($HookStatusEvent));
+        event(new AdvancedCallEvent($HookStatusEvent));
         return Null;
     }
 
@@ -814,7 +814,7 @@ class AdvancedCallController extends Controller
             "targetId" => (string)$xml->targetId,
             "httpContactUri" => (string)$xml->httpContact->uri
         );
-        event(new Events\AdvancedCallEvent($SubscriptionTerminatedEvent));
+        event(new AdvancedCallEvent($SubscriptionTerminatedEvent));
         return Null;
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace jvleeuwen\broadsoft;
+namespace jvleeuwen\broadsoft\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use jvleeuwen\broadsoft\CallCenterAgentEvent;
+use jvleeuwen\broadsoft\Events\CallCenterAgentEvent;
 
 class CallCenterAgentController extends Controller
 {
@@ -59,7 +59,7 @@ class CallCenterAgentController extends Controller
             "acdUserId" => (string)$xml->eventData->ccAgentJoinUpdateData->joinInfo->acdUserId,
             "skillLevel" => (int)$xml->eventData->ccAgentJoinUpdateData->joinInfo->skillLevel
         );
-        event(new Events\CallCenterAgentEvent($ACDAgentJoinUpdateEvent));
+        event(new CallCenterAgentEvent($ACDAgentJoinUpdateEvent));
         return Null;
     }
 
@@ -80,7 +80,7 @@ class CallCenterAgentController extends Controller
             "totalAvailableTime" => (int)$xml->eventData->agentStateInfo->totalAvailableTime,
             "averageWrapUpTime" => (int)$xml->eventData->agentStateInfo->averageWrapUpTime->value
         );
-        event(new Events\CallCenterAgentEvent($AgentStateEvent));
+        event(new CallCenterAgentEvent($AgentStateEvent));
         return Null;
     }
 
@@ -108,7 +108,7 @@ class CallCenterAgentController extends Controller
             "state" => (string)$xml->eventData->stateInfo->state,
             "stateTimestamp" => (int)$xml->eventData->stateInfo->stateTimestamp->value
         );
-        event(new Events\CallCenterAgentEvent($AgentSubscriptionEvent));
+        event(new CallCenterAgentEvent($AgentSubscriptionEvent));
         return Null;
     }
     
@@ -127,7 +127,7 @@ class CallCenterAgentController extends Controller
             "targetId" => (string)$xml->targetId,
             "httpContactUri" => (string)$xml->httpContact->uri
         );
-        event(new Events\CallCenterAgentEvent($SubscriptionTerminatedEvent));
+        event(new CallCenterAgentEvent($SubscriptionTerminatedEvent));
         return Null;
     }
 }

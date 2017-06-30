@@ -1,9 +1,14 @@
 <?php
 
 Route::group(['prefix' => 'bs'], function () {
-    Route::post('CallCenterAgent', 'jvleeuwen\broadsoft\CallCenterAgentController@Incomming'); // Handles all incomming XML for the Call Center Agent events.
-    Route::post('CallCenterQueue', 'jvleeuwen\broadsoft\CallCenterQueueController@Incomming'); // Handles all incomming XML for the Call Center Agent events.
-    Route::post('AdvancedCall', 'jvleeuwen\broadsoft\AdvancedCallController@Incomming'); // Handles all incomming XML for the Advanced Call events.
+    Route::post('CallCenterAgent', 'jvleeuwen\broadsoft\Controllers\CallCenterAgentController@Incomming'); // Handles all incomming XML for the Call Center Agent events.
+    Route::post('CallCenterQueue', 'jvleeuwen\broadsoft\Controllers\CallCenterQueueController@Incomming'); // Handles all incomming XML for the Call Center Agent events.
+    Route::post('AdvancedCall', 'jvleeuwen\broadsoft\Controllers\AdvancedCallController@Incomming'); // Handles all incomming XML for the Advanced Call events.
+
+    Route::group(['prefix' => 'actions'], function () {
+        Route::get('getcallcenters', 'jvleeuwen\broadsoft\Controllers\ActionController@GetCallCenters');
+        Route::get('getallusers', 'jvleeuwen\broadsoft\Controllers\ActionController@GetAllUsers');
+    });
 
     Route::get('debug', 'jvleeuwen\broadsoft\Controllers\DebugController@Index');
     Route::group(['prefix' => 'debug'], function () {

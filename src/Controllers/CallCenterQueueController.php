@@ -1,10 +1,10 @@
 <?php
 
-namespace jvleeuwen\broadsoft;
+namespace jvleeuwen\broadsoft\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use jvleeuwen\broadsoft\CallCenterAgentEvent;
+use jvleeuwen\broadsoft\Events\CallCenterAgentEvent;
 
 class CallCenterQueueController extends Controller
 {
@@ -65,7 +65,7 @@ class CallCenterQueueController extends Controller
             "acdName" => (string)$xml->eventData->queueEntry->acdName,
             "acdNumber" => (string)$xml->eventData->queueEntry->acdNumber
         );
-        event(new Events\CallCenterQueueEvent($ACDCallAbandonedEvent));
+        event(new CallCenterQueueEvent($ACDCallAbandonedEvent));
         return Null;
     }
 
@@ -91,7 +91,7 @@ class CallCenterQueueController extends Controller
             "addTimeInPriorityBucket" => (int)$xml->eventData->queueEntry->addTimeInPriorityBucket,
             "position" => (int)$xml->eventData->position
         );
-        event(new Events\CallCenterQueueEvent($ACDCallAddedEvent));
+        event(new CallCenterQueueEvent($ACDCallAddedEvent));
         return Null;
     }
 
@@ -119,7 +119,7 @@ class CallCenterQueueController extends Controller
             "positiansweringUserIdon" => (string)$xml->eventData->queueEntry->answeringUserId,
             "answeringCallId" => (string)$xml->eventData->queueEntry->answeringCallId
         );
-        event(new Events\CallCenterQueueEvent($ACDCallAnsweredByAgentEvent));
+        event(new CallCenterQueueEvent($ACDCallAnsweredByAgentEvent));
         return Null;
     }
 
@@ -144,7 +144,7 @@ class CallCenterQueueController extends Controller
             "position" => (int)$xml->eventData->position
 
         );
-        event(new Events\CallCenterQueueEvent($ACDCallBouncedEvent));
+        event(new CallCenterQueueEvent($ACDCallBouncedEvent));
         return Null;
     }
 
@@ -169,7 +169,7 @@ class CallCenterQueueController extends Controller
             "acdPriority" => (string)$xml->eventData->queueEntry->acdPriority,
             "addTimeInPriorityBucket" => (int)$xml->eventData->queueEntry->addTimeInPriorityBucket
         );
-        event(new Events\CallCenterQueueEvent($ACDCallOfferedToAgentEvent));
+        event(new CallCenterQueueEvent($ACDCallOfferedToAgentEvent));
         return Null;
     }
 
@@ -198,7 +198,7 @@ class CallCenterQueueController extends Controller
             "redirectReason" => (string)$xml->eventData->redirect->reason,
             "redirectTime" => (int)$xml->eventData->redirect->redirectTime
         );
-        event(new Events\CallCenterQueueEvent($ACDCallOverflowedEvent));
+        event(new CallCenterQueueEvent($ACDCallOverflowedEvent));
         return Null;
     }
 
@@ -226,7 +226,7 @@ class CallCenterQueueController extends Controller
             "overflowReason" => (string)$xml->eventData->overflowReason,
             "reason" => (string)$xml->eventData->reason
         );
-        event(new Events\CallCenterQueueEvent($ACDCallOverflowedTreatmentCompletedEvent));
+        event(new CallCenterQueueEvent($ACDCallOverflowedTreatmentCompletedEvent));
         return Null;
     }
 
@@ -253,7 +253,7 @@ class CallCenterQueueController extends Controller
             "redirectReason" => (string)$xml->eventData->redirect->reason,
             "redirectTime" => (string)$xml->eventData->redirect->redirectTime
         );
-        event(new Events\CallCenterQueueEvent($ACDCallTransferredEvent));
+        event(new CallCenterQueueEvent($ACDCallTransferredEvent));
         return Null;
     }
 
@@ -271,7 +271,7 @@ class CallCenterQueueController extends Controller
             "externalApplicationId" => (string)$xml->externalApplicationId,
             "httpContact" => (string)$xml->httpContact->uri
         );
-        event(new Events\CallCenterQueueEvent($SubscriptionTerminatedEvent));
+        event(new CallCenterQueueEvent($SubscriptionTerminatedEvent));
         return Null;
     }
 }
