@@ -102,7 +102,10 @@ class ActionController extends Controller
                     {
                         if($user['firstName']['$'] == "Call Center")
                         {
-                            array_push($callCenterArray, $user);
+                            if(isset($user['additionalDetails']['department']))
+                            {
+                                array_push($callCenterArray, $user);
+                            }
                         }
                         else
                         {
@@ -135,7 +138,10 @@ class ActionController extends Controller
                         {
                             if($user['firstName']['$'] == "Call Center")
                             {
-                                array_push($callCenterArray, $user);
+                                if(isset($user['additionalDetails']['department']))
+                                {
+                                    array_push($callCenterArray, $user);
+                                }
                             }
                             else
                             {
@@ -150,6 +156,6 @@ class ActionController extends Controller
             }
             $parsedRecords +=$numberOfRecords;
         }
-        return response()->json($callCenterArray);
+        return response()->json($userArray);
     }
 }
