@@ -4,21 +4,39 @@ namespace jvleeuwen\broadsoft\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class DebugController extends Controller
 {
+    public function Index()
+    {
+        $data = array(
+            'routes' => Route::getRoutes()->get()
+        );
+        return view('broadsoft::bs.debug.index', $data);
+    }
+
     public function CallCenterAgentEvent()
     {
-    	return view('broadsoft::bs.debug.callcenteragent');
+        $data = array(
+            'routes' => Route::getRoutes()->get()
+        );
+    	return view('broadsoft::bs.debug.callcenteragent', $data);
     }
 
     public function CallCenterQueueEvent()
     {
-        return view('broadsoft::bs.debug.callcenterqueue');
+        $data = array(
+            'routes' => Route::getRoutes()->get()
+        );
+        return view('broadsoft::bs.debug.callcenterqueue', $data);
     }
 
     public function AdvancedCallEvent()
     {
-        return view('broadsoft::bs.debug.advancedcall');
+        $data = array(
+            'routes' => Route::getRoutes()->get()
+        );
+        return view('broadsoft::bs.debug.advancedcall', $data);
     }
 }

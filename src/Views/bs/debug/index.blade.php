@@ -4,22 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Debug:CallCenterAgent</title>
-        <meta name="csrf-token" content="{{ csrf_token() }}">
         <link href="{{ mix('css/app.css') }}" rel="stylesheet"></link>
-        <style>
-            body {
-                /*background-color:#e42332;
-                color: #FFFFFF;*/
-            }
-            pre {
-                background-color: ghostwhite;
-                color: #777;
-                border: 1px solid #777;
-                padding: 10px 20px;
-                margin: 20px; 
-                }
-        </style>
     </head>
     <body>
         <div id="app">
@@ -47,16 +32,11 @@
                     </div>
                     <div class="col-md-12">      
                         <div id="row">
-                            <div id='bs'>
-                                <h1>Debug Call Center Agent Event</h1>
-                                <small>* latest 25 messages, showing latest first</small>
-                                <debugcallcenteragent></debugcallcenteragent>
-                            </div>
+                            <h1>Debug Index</h1>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </body>
-    <script src="/js/broadsoft.js"></script>
 </html>

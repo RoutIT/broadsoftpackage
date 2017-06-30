@@ -57,7 +57,7 @@ class CallCenterAgentController extends Controller
             "subscriptionId" => (string)$xml->subscriptionId,
             "targetId" => (string)$xml->targetId,
             "acdUserId" => (string)$xml->eventData->ccAgentJoinUpdateData->joinInfo->acdUserId,
-            "skillLevel" => (int)$xml->eventData->ccAgentJoinUpdateData->joinInfo->skillLevel,
+            "skillLevel" => (int)$xml->eventData->ccAgentJoinUpdateData->joinInfo->skillLevel
         );
         event(new Events\CallCenterAgentEvent($ACDAgentJoinUpdateEvent));
         return Null;
@@ -78,7 +78,7 @@ class CallCenterAgentController extends Controller
             "stateTimestamp" => (int)$xml->eventData->agentStateInfo->stateTimestamp->value,
             "signInTimestamp" => (int)$xml->eventData->agentStateInfo->signInTimestamp,
             "totalAvailableTime" => (int)$xml->eventData->agentStateInfo->totalAvailableTime,
-            "averageWrapUpTime" => (int)$xml->eventData->agentStateInfo->averageWrapUpTime->value,
+            "averageWrapUpTime" => (int)$xml->eventData->agentStateInfo->averageWrapUpTime->value
         );
         event(new Events\CallCenterAgentEvent($AgentStateEvent));
         return Null;
@@ -106,7 +106,7 @@ class CallCenterAgentController extends Controller
             "targetId" => (string)$xml->targetId,
             "joinData" => $joins,
             "state" => (string)$xml->eventData->stateInfo->state,
-            "stateTimestamp" => (int)$xml->eventData->stateInfo->stateTimestamp->value,
+            "stateTimestamp" => (int)$xml->eventData->stateInfo->stateTimestamp->value
         );
         event(new Events\CallCenterAgentEvent($AgentSubscriptionEvent));
         return Null;
@@ -125,7 +125,7 @@ class CallCenterAgentController extends Controller
             "userId" => (string)$xml->userId,
             "externalApplicationId" => (string)$xml->externalApplicationId,
             "targetId" => (string)$xml->targetId,
-            "httpContactUri" => (string)$xml->httpContact->uri,
+            "httpContactUri" => (string)$xml->httpContact->uri
         );
         event(new Events\CallCenterAgentEvent($SubscriptionTerminatedEvent));
         return Null;

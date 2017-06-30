@@ -346,7 +346,7 @@ class AdvancedCallController extends Controller
             "waitTime" => (int)$xml->eventData->call->acdCallInfo->waitTime,
             "callingPartyInfoName" => (string)$xml->eventData->call->acdCallInfo->callingPartyInfo->name,
             "callingPartyInfoAddress" => (string)$xml->eventData->call->acdCallInfo->callingPartyInfo->address,
-            "callingPartyInfoCallType" => (string)$xml->eventData->call->acdCallInfo->callingPartyInfo->callType,
+            "callingPartyInfoCallType" => (string)$xml->eventData->call->acdCallInfo->callingPartyInfo->callType
         );
         event(new Events\AdvancedCallEvent($CallReceivedEvent));
         return Null;
@@ -383,7 +383,7 @@ class AdvancedCallController extends Controller
             "callingPartyInfoAddress" => (string)$xml->eventData->call->acdCallInfo->callingPartyInfo->address,
             "callingPartyInfoCallType" => (string)$xml->eventData->call->acdCallInfo->callingPartyInfo->callType,
             "allowedRecordingControls" => (string)$xml->eventData->call->allowedRecordingControls,
-            "recordingState" => (string)$xml->eventData->call->recordingState,
+            "recordingState" => (string)$xml->eventData->call->recordingState
         );
         event(new Events\AdvancedCallEvent($CallRecordingStartedEvent));
         return Null;
@@ -419,9 +419,402 @@ class AdvancedCallController extends Controller
             "waitTime" => (int)$xml->eventData->call->acdCallInfo->waitTime,
             "allowedRecordingControls" => (string)$xml->eventData->call->allowedRecordingControls,
             "recordingState" => (string)$xml->eventData->call->recordingState,
-            "reason" => (string)$xml->eventData->reason,
+            "reason" => (string)$xml->eventData->reason
         );
         event(new Events\AdvancedCallEvent($CallRecordingStoppedEvent));
+        return Null;
+    }
+
+    /*
+        Parse Call Redirected Events
+    */
+    protected function CallRedirectedEvent($xml)
+    {
+        $calllist = array();
+        $calls = $xml->eventData->calls->call;
+
+        foreach($calls as $call)
+        {
+            $callId = (string)$call->callId;
+            $extTrackingId = (string)$call->extTrackingId;
+            $personality = (string)$call->personality;
+            $state = (string)$call->state;
+            $remotePartyName = (string)$call->remoteParty->name;
+            $remotePartyAddress = (string)$call->remoteParty->address;
+            $remotePartyUserId = (string)$call->remoteParty->userId;
+            $remotePartyUserDN = (string)$call->remoteParty->userDN;
+            $remotePartyCallType = (string)$call->remoteParty->callType;
+            $redirectAddress = (string)$call->redirect->address;
+            $redirectReason = (string)$call->redirect->reason;
+            $redirectTime = (int)$call->redirect->redirectTime;
+            $startTime = (int)$call->startTime;
+            $answerTime = (int)$call->answerTime;
+            $totalHeldTime = (int)$call->totalHeldTime;
+            $detachedTime = (int)$call->detachedTime;
+            $allowedRecordingControls = (string)$call->allowedRecordingControls;
+
+            array_push($calllist, array(
+                "callId" =>$callId,
+                "extTrackingId" => $extTrackingId,
+                "personality" => $personality,
+                "state" => $state,
+                "remotePartyName" => $remotePartyName,
+                "remotePartyAddress" => $remotePartyAddress,
+                "remotePartyUserId" => $remotePartyUserId,
+                "remotePartyUserDN" => $remotePartyUserDN,
+                "remotePartyCallType" => $remotePartyCallType,
+                "redirectAddress" => $redirectAddress,
+                "redirectReason" => $redirectReason,
+                "redirectTime" => $redirectTime,
+                "startTime" => $startTime,
+                "answerTime" => $answerTime,
+                "totalHeldTime" => $totalHeldTime,
+                "detachedTime" => $detachedTime,
+                "allowedRecordingControls" => $allowedRecordingControls
+            ));
+        }
+        $CallRedirectedEvent = array(
+            "eventType" => (string)"CallRedirectedEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "calls" => $calllist
+        );
+        event(new Events\AdvancedCallEvent($CallRedirectedEvent));
+        return Null;
+    }
+
+    /*
+        Parse Call Released Events
+    */
+    protected function CallReleasedEvent($xml)
+    {
+        $CallReleasedEvent = array(
+            "eventType" => (string)"CallReleasedEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "callId" => (string)$xml->eventData->call->callId,
+            "extTrackingId" => (string)$xml->eventData->call->extTrackingId,
+            "personality" => (string)$xml->eventData->call->personality,
+            "state" => (string)$xml->eventData->call->state,
+            "releasingParty" => (string)$xml->eventData->call->releasingParty,
+            "remotePartyName" => (string)$xml->eventData->call->remoteParty->name,
+            "remotePartyAddress" => (string)$xml->eventData->call->remoteParty->address,
+            "remotePartyUserId" => (string)$xml->eventData->call->remoteParty->userId,
+            "remotePartyUserDN" => (string)$xml->eventData->call->remoteParty->userDN,
+            "remotePartycallType" => (string)$xml->eventData->call->remoteParty->callType,
+            "startTime" => (int)$xml->eventData->call->startTime,
+            "answerTime" => (int)$xml->eventData->call->answerTime,
+            "releaseTime" => (int)$xml->eventData->call->releaseTime,
+            "allowedRecordingControls" => (string)$xml->eventData->call->allowedRecordingControls
+        );
+        event(new Events\AdvancedCallEvent($CallReleasedEvent));
+        return Null;
+    }
+
+    /*
+        Parse Call Releasing Events
+    */
+    protected function CallReleasingEvent($xml)
+    {
+        $CallReleasingEvent = array(
+            "eventType" => (string)"CallReleasingEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "callId" => (string)$xml->eventData->call->callId,
+            "extTrackingId" => (string)$xml->eventData->call->extTrackingId,
+            "personality" => (string)$xml->eventData->call->personality,
+            "state" => (string)$xml->eventData->call->state,
+            "releaseCauseInternalReleaseCause" => (string)$xml->eventData->call->releaseCause->internalReleaseCause,
+            "releaseCauseCdrTerminationCause" => (int)$xml->eventData->call->releaseCause->cdrTerminationCause,
+            "releasingParty" => (string)$xml->eventData->call->releasingParty,
+            "remotePartyName" => (string)$xml->eventData->call->remoteParty->name,
+            "remotePartyAddress" => (string)$xml->eventData->call->remoteParty->address,
+            "remotePartyUserId" => (string)$xml->eventData->call->remoteParty->userId,
+            "remotePartyUserDN" => (string)$xml->eventData->call->remoteParty->userDN,
+            "remotePartycallType" => (string)$xml->eventData->call->remoteParty->callType,
+            "addressOfRecord" => (string)$xml->eventData->call->endpoint->addressOfRecord,
+            "appearance" => (int)$xml->eventData->call->appearance,
+            "startTime" => (int)$xml->eventData->call->startTime
+        );
+        event(new Events\AdvancedCallEvent($CallReleasingEvent));
+        return Null;
+    }
+
+    /*
+        Parse Call Retrieved Events
+    */
+    protected function CallRetrievedEvent($xml)
+    {
+        $CallRetrievedEvent = array(
+            "eventType" => (string)"CallRetrievedEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "callId" => (string)$xml->eventData->call->callId,
+            "extTrackingId" => (string)$xml->eventData->call->extTrackingId,
+            "personality" => (string)$xml->eventData->call->personality,
+            "state" => (string)$xml->eventData->call->state,
+            "remotePartyName" => (string)$xml->eventData->call->remoteParty->name,
+            "remotePartyAddress" => (string)$xml->eventData->call->remoteParty->address,
+            "remotePartyUserId" => (string)$xml->eventData->call->remoteParty->userId,
+            "remotePartyUserDN" => (string)$xml->eventData->call->remoteParty->userDN,
+            "remotePartycallType" => (string)$xml->eventData->call->remoteParty->callType,
+            "addressOfRecord" => (string)$xml->eventData->call->endpoint->addressOfRecord,
+            "appearance" => (int)$xml->eventData->call->appearance,
+            "startTime" => (int)$xml->eventData->call->startTime,
+            "answerTime" => (int)$xml->eventData->call->answerTime,
+            "totalHeldTime" => (int)$xml->eventData->call->totalHeldTime,
+            "acdUserId" => (string)$xml->eventData->call->acdCallInfo->acdUserId,
+            "acdName" => (string)$xml->eventData->call->acdCallInfo->acdName,
+            "acdNumber" => (string)$xml->eventData->call->acdCallInfo->acdNumber,
+            "numCallsInQueue" => (int)$xml->eventData->call->acdCallInfo->numCallsInQueue,
+            "waitTime" => (int)$xml->eventData->call->acdCallInfo->waitTime,
+            "callingPartyInfoName" => (string)$xml->eventData->call->acdCallInfo->callingPartyInfo->name,
+            "callingPartyInfoAddress" => (string)$xml->eventData->call->acdCallInfo->callingPartyInfo->address,
+            "callingPartyInfoCallType" => (string)$xml->eventData->call->acdCallInfo->callingPartyInfo->callType,
+            "allowedRecordingControls" => (string)$xml->eventData->call->allowedRecordingControls,
+            "recordingState" => (string)$xml->eventData->call->recordingState
+        );
+        event(new Events\AdvancedCallEvent($CallRetrievedEvent));
+        return Null;
+    }
+
+    /*
+        Parse Call Subscription Events
+    */
+    protected function CallSubscriptionEvent($xml)
+    {
+        $CallSubscriptionEvent = array(
+            "eventType" => (string)"CallSubscriptionEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "hookStatus" => (string)$xml->eventData->hookStatus
+        );
+        event(new Events\AdvancedCallEvent($CallSubscriptionEvent));
+        return Null;
+    }
+
+    /*
+        Parse Call Transferred Events
+    */
+    protected function CallTransferredEvent($xml)
+    {
+        $CallTransferredEvent = array(
+            "eventType" => (string)"CallTransferredEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "callId" => (string)$xml->eventData->call->callId,
+            "extTrackingId" => (string)$xml->eventData->call->extTrackingId,
+            "personality" => (string)$xml->eventData->call->personality,
+            "state" => (string)$xml->eventData->call->state,
+            "remotePartyName" => (string)$xml->eventData->call->remoteParty->name,
+            "remotePartyAddress" => (string)$xml->eventData->call->remoteParty->address,
+            "remotePartyUserId" => (string)$xml->eventData->call->remoteParty->userId,
+            "remotePartyUserDN" => (string)$xml->eventData->call->remoteParty->userDN,
+            "remotePartycallType" => (string)$xml->eventData->call->remoteParty->callType,
+            "address" => (string)$xml->eventData->call->endpoint->address,
+            "appearance" => (int)$xml->eventData->call->appearance,
+            "startTime" => (int)$xml->eventData->call->startTime,
+            "answerTime" => (int)$xml->eventData->call->answerTime
+        );
+        event(new Events\AdvancedCallEvent($CallTransferredEvent));
+        return Null;
+    }
+
+    /*
+        Parse Call Updated Events
+    */
+    protected function CallUpdatedEvent($xml)
+    {
+        $CallUpdatedEvent = array(
+            "eventType" => (string)"CallUpdatedEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "callId" => (string)$xml->eventData->call->callId,
+            "extTrackingId" => (string)$xml->eventData->call->extTrackingId,
+            "personality" => (string)$xml->eventData->call->personality,
+            "state" => (string)$xml->eventData->call->state,
+            "remotePartyName" => (string)$xml->eventData->call->remoteParty->name,
+            "remotePartyAddress" => (string)$xml->eventData->call->remoteParty->address,
+            "remotePartyUserId" => (string)$xml->eventData->call->remoteParty->userId,
+            "remotePartyUserDN" => (string)$xml->eventData->call->remoteParty->userDN,
+            "remotePartycallType" => (string)$xml->eventData->call->remoteParty->callType,
+            "addressOfRecord" => (string)$xml->eventData->call->endpoint->addressOfRecord,
+            "appearance" => (int)$xml->eventData->call->appearance,
+            "startTime" => (int)$xml->eventData->call->startTime
+        );
+        event(new Events\AdvancedCallEvent($CallUpdatedEvent));
+        return Null;
+    }
+
+    /*
+        Parse Conference Held Events
+    */
+    protected function ConferenceHeldEvent($xml)
+    {
+        $ConferenceHeldEvent = array(
+            "eventType" => (string)"ConferenceHeldEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "state" => (string)$xml->eventData->conference->state,
+            "addressOfRecord" => (string)$xml->eventData->conference->endpoint->addressOfRecord,
+            "appearance" => (int)$xml->eventData->conference->appearance
+        );
+        event(new Events\AdvancedCallEvent($ConferenceHeldEvent));
+        return Null;
+    }
+
+    /*
+        Parse Conference Released Events
+    */
+    protected function ConferenceReleasedEvent($xml)
+    {
+        $ConferenceReleasedEvent = array(
+            "eventType" => (string)"ConferenceReleasedEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "state" => (string)$xml->eventData->conference->state
+        );
+        event(new Events\AdvancedCallEvent($ConferenceReleasedEvent));
+        return Null;
+    }
+
+    /*
+        Parse Conference Retrieved Events
+    */
+    protected function ConferenceRetrievedEvent($xml)
+    {
+        $conferenceParticipantList= array();
+        $confParticipantList = $xml->eventData->conference->conferenceParticipantList->conferenceParticipant;
+
+        foreach($confParticipantList as $participant)
+        {
+            $callId = (string)$participant->callId;
+            array_push($conferenceParticipantList, array( "callId"=> $callId));
+        }
+
+        $ConferenceRetrievedEvent = array(
+            "eventType" => (string)"ConferenceRetrievedEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "state" => (string)$xml->eventData->conference->state,
+            "addressOfRecord" => (string)$xml->eventData->conference->endpoint->addressOfRecord,
+            "appearance" => (int)$xml->eventData->conference->appearance,
+            "conferenceParticipantList" => $conferenceParticipantList
+        );
+        event(new Events\AdvancedCallEvent($ConferenceRetrievedEvent));
+        return Null;
+    }
+
+    /*
+        Parse Conference Started Events
+    */
+    protected function ConferenceStartedEvent($xml)
+    {
+        $conferenceParticipantList= array();
+        $confParticipantList = $xml->eventData->conference->conferenceParticipantList->conferenceParticipant;
+
+        foreach($confParticipantList as $participant)
+        {
+            $callId = (string)$participant->callId;
+            array_push($conferenceParticipantList, array( "callId"=> $callId));
+        }
+
+        $ConferenceStartedEvent = array(
+            "eventType" => (string)"ConferenceStartedEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "state" => (string)$xml->eventData->conference->state,
+            "addressOfRecord" => (string)$xml->eventData->conference->endpoint->addressOfRecord,
+            "appearance" => (int)$xml->eventData->conference->appearance,
+            "conferenceType" => (string)$xml->eventData->conference->conferenceType,
+            "conferenceParticipantList" => $conferenceParticipantList
+        );
+        event(new Events\AdvancedCallEvent($ConferenceStartedEvent));
+        return Null;
+    }
+
+    /*
+        Parse Conference Updates Events
+    */
+    protected function ConferenceUpdatedEvent($xml)
+    {
+        $conferenceParticipantList= array();
+        $confParticipantList = $xml->eventData->conference->conferenceParticipantList->conferenceParticipant;
+
+        foreach($confParticipantList as $participant)
+        {
+            $callId = (string)$participant->callId;
+            array_push($conferenceParticipantList, array( "callId"=> $callId));
+        }
+
+        $ConferenceUpdatedEvent = array(
+            "eventType" => (string)"ConferenceUpdatedEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "state" => (string)$xml->eventData->conference->state,
+            "addressOfRecord" => (string)$xml->eventData->conference->endpoint->addressOfRecord,
+            "appearance" => (int)$xml->eventData->conference->appearance,
+            "conferenceParticipantList" => $conferenceParticipantList
+        );
+        event(new Events\AdvancedCallEvent($ConferenceUpdatedEvent));
+        return Null;
+    }
+
+    /*
+        Parse Hook Status Events
+    */
+    protected function HookStatusEvent($xml)
+    {
+        $HookStatusEvent = array(
+            "eventType" => (string)"HookStatusEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "state" => (string)$xml->eventData->hookStatus
+        );
+        event(new Events\AdvancedCallEvent($HookStatusEvent));
+        return Null;
+    }
+
+    /*
+        Parse Subscription Terminated Events
+    */
+    protected function SubscriptionTerminatedEvent($xml)
+    {
+        $SubscriptionTerminatedEvent = array(
+            "eventType" => (string)"SubscriptionTerminatedEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "httpContactUri" => (string)$xml->httpContact->uri
+        );
+        event(new Events\AdvancedCallEvent($SubscriptionTerminatedEvent));
         return Null;
     }
 }
