@@ -8,8 +8,16 @@ use Illuminate\Support\Facades\Route;
 use GuzzleHttp\Client;
 use Illuminate\Support\Str;
 
+use jvleeuwen\broadsoft\Repositories\Contracts\BsUserInterface;
+
 class ActionController extends Controller
 {
+    
+    public function __construct(BsUserInterface $bsUser)
+    {
+        $this->bsUser = $bsUser;
+    }
+
     private function RequestInit()
     {
        $client = new Client([
@@ -77,7 +85,7 @@ class ActionController extends Controller
         return response()->json($userArray);
     }
 
-    public function GetAllUsers()
+    public function GetUsers()
     {
         $blacklist = explode(',', env('BS_USER_BLACKLIST'));
         $accepted_domains = explode(',',env('BS_ACCEPTED_DOMAINS'));
@@ -155,6 +163,15 @@ class ActionController extends Controller
                 }
             }
             $parsedRecords +=$numberOfRecords;
+        }
+        $insertToDB = $this->bsUser->SaveToDB($userArray);
+        if($insertToDB['errors'] > 0)
+        {
+            return "Total numnber of errors: ". $insertToDB['errors'] . " updates: " .$insertToDB['updates'] ." new: " .$insertToDB['new'];
+        }
+        else
+        {
+            return "No Errors occurred, updates: "  . $insertToDB['updates'] ." new: " .$insertToDB['new'];
         }
         return response()->json($userArray);
     }

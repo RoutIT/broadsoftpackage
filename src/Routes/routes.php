@@ -7,7 +7,7 @@ Route::group(['prefix' => 'bs'], function () {
 
     Route::group(['prefix' => 'actions'], function () {
         Route::get('getcallcenters', 'jvleeuwen\broadsoft\Controllers\ActionController@GetCallCenters');
-        Route::get('getallusers', 'jvleeuwen\broadsoft\Controllers\ActionController@GetAllUsers');
+        Route::get('getusers', 'jvleeuwen\broadsoft\Controllers\ActionController@GetUsers');
     });
 
     Route::get('debug', 'jvleeuwen\broadsoft\Controllers\DebugController@Index');
