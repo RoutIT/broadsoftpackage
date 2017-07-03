@@ -20,7 +20,7 @@ class CreateBsUserTable extends Migration
             $table->string('lastName');
             $table->string('groupId');
             $table->string('number')->nullable();
-            $table->string('extension');
+            $table->string('extension')->nullable();
             $table->string('mobile')->nullable();
             $table->string('emailAddress')->nullable();
             $table->string('department')->nullable();

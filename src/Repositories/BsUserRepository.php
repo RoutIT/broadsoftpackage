@@ -7,6 +7,19 @@ use jvleeuwen\broadsoft\Database\Models\bsUser;
 
 class BsUserRepository implements BsUserInterface
 {
+    public function UserdbCompare($bsArray)
+    {
+        $dbUsers = bsUser::all();
+        foreach($dbUsers as $dbUser)
+        {
+            if(!in_array($dbUser->userId, array_flatten($bsArray)))
+            {
+                bsUser::where('userId', $dbUser->userId)->delete();
+            }
+        }
+        return True;
+    }
+
     public function SaveToDB($UserArray)
     {
         $new = 0;
@@ -20,7 +33,8 @@ class BsUserRepository implements BsUserInterface
             $lastName = $user['lastName']['$'];
             $groupId = $user['groupId']['$'];
             if(isset($user['number'])){$number = $user['number']['$'];}else{$number = NULL;}
-            $extension = $user['extension']['$'];
+            if(isset($user['extension'])){$extension = $user['extension']['$'];}else{$extension = NULL;}
+            // $extension = $user['extension']['$'];
             // Below items may not be set !
             if(isset($user['additionalDetails']))
             {

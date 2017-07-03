@@ -149,14 +149,14 @@ class ActionController extends Controller
                         {
                             if($user['firstName']['$'] == "Call Center")
                             {
-                                if(isset($user['additionalDetails']['department']))
+                                if(isset($user['extension']))
                                 {
                                     array_push($callCenterArray, $user);
                                 }
                             }
                             else
                             {
-                                if(isset($user['additionalDetails']['department']))
+                                if(isset($user['extension']))
                                 {
                                     array_push($userArray, $user);
                                 }
@@ -169,7 +169,8 @@ class ActionController extends Controller
         }
 
         $this->bsUser->SaveToDB($userArray);
-        // $this->bsCallCenter->SaveToDB($callCenterArray);
+        $this->bsCallcenter->SaveToDB($callCenterArray);
+        $this->bsUser->UserdbCompare($userArray);
         return response()->json($userArray);
     }
 }
