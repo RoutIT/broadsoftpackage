@@ -19,7 +19,7 @@ class CreateBsCallcenterTable extends Migration
             $table->string('firstName');
             $table->string('lastName');
             $table->string('groupId');
-            $table->string('extension');
+            $table->string('extension')->nullable();
             $table->timestamps();
         });
     }

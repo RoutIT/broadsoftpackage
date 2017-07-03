@@ -9,13 +9,15 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Str;
 
 use jvleeuwen\broadsoft\Repositories\Contracts\BsUserInterface;
+use jvleeuwen\broadsoft\Repositories\Contracts\BsCallCenterInterface;
 
 class ActionController extends Controller
 {
     
-    public function __construct(BsUserInterface $bsUser)
+    public function __construct(BsUserInterface $bsUser, BsCallCenterInterface $bsCallCenter)
     {
         $this->bsUser = $bsUser;
+        $this->bsCallcenter = $bsCallCenter;
     }
 
     private function RequestInit()
@@ -52,7 +54,7 @@ class ActionController extends Controller
 
     public function GetCallCenters()
     {
-        $userArray = array();
+        $callCenterArray = array();
         $base = $this->RequestInit();
         $uri = $this->RequestAction('/directories/group?format=json&firstName=Call%20Center'); // This request gets only callcenters bases on the Firstname
         $response = $this->RequestResponse($base,$uri);
@@ -64,7 +66,7 @@ class ActionController extends Controller
         $users = $data['Group']['groupDirectory']['directoryDetails'];
         foreach($users as $user)
         {
-            array_push($userArray, $user);
+            array_push($callCenterArray, $user);
         }
 
         while($parsedRecords <= $totalAvailableRecords){ 
@@ -78,11 +80,12 @@ class ActionController extends Controller
             $users = $data['Group']['groupDirectory']['directoryDetails'];
             foreach($users as $user)
             {
-                array_push($userArray, $user);
+                array_push($callCenterArray, $user);
             }
             $parsedRecords +=$numberOfRecords;
         }
-        return response()->json($userArray);
+        $this->bsCallcenter->SaveToDB($callCenterArray);
+        return response()->json($callCenterArray);
     }
 
     public function GetUsers()
@@ -164,15 +167,9 @@ class ActionController extends Controller
             }
             $parsedRecords +=$numberOfRecords;
         }
-        $insertToDB = $this->bsUser->SaveToDB($userArray);
-        if($insertToDB['errors'] > 0)
-        {
-            return "Total numnber of errors: ". $insertToDB['errors'] . " updates: " .$insertToDB['updates'] ." new: " .$insertToDB['new'];
-        }
-        else
-        {
-            return "No Errors occurred, updates: "  . $insertToDB['updates'] ." new: " .$insertToDB['new'];
-        }
+
+        $this->bsUser->SaveToDB($userArray);
+        // $this->bsCallCenter->SaveToDB($callCenterArray);
         return response()->json($userArray);
     }
 }
