@@ -4,6 +4,7 @@ namespace jvleeuwen\broadsoft\Repositories;
 
 use jvleeuwen\broadsoft\Repositories\Contracts\BsUserInterface;
 use jvleeuwen\broadsoft\Database\Models\bsUser;
+use jvleeuwen\broadsoft\Database\Models\bsUserAssignedCallcenter;
 
 class BsUserRepository implements BsUserInterface
 {
@@ -93,5 +94,71 @@ class BsUserRepository implements BsUserInterface
             }
         }
         return array('errors' => $errors, 'updates' => $updates, 'new' => $new);
+    }
+
+    public function GetAllUsers()
+    {
+        return bsUser::all();
+    }
+
+    public function SaveUserCallCenterServices($CallCenterServicesArray)
+    {
+        foreach($CallCenterServicesArray as $ServiceUser)
+        {
+            $ExistingUser = bsUserAssignedCallcenter::where('userId',$ServiceUser['userId'])->where('serviceUserId', $ServiceUser['serviceUserId'])->first();
+            if($ExistingUser) // userid/serviceUserID combination exists in the database
+            {
+                $ExistingUser->userId = $ServiceUser['userId'];
+                $ExistingUser->serviceUserId = $ServiceUser['serviceUserId'];
+                $ExistingUser->available = $ServiceUser['available'];
+                $ExistingUser->skillLevel = $ServiceUser['skillLevel'];
+                $ExistingUser->extension = $ServiceUser['extension'];
+                $ExistingUser->phoneNumber = $ServiceUser['phoneNumber'];
+                $ExistingUser->save();
+            }
+            else
+            {
+                $NewUser = New bsUserAssignedCallcenter;
+                $NewUser->userId = $ServiceUser['userId'];
+                $NewUser->serviceUserId = $ServiceUser['serviceUserId'];
+                $NewUser->available = $ServiceUser['available'];
+                $NewUser->skillLevel = $ServiceUser['skillLevel'];
+                $NewUser->extension = $ServiceUser['extension'];
+                $NewUser->phoneNumber = $ServiceUser['phoneNumber'];
+                $NewUser->save();
+            }
+        }
+        return True;
+    }
+
+    public function CallCenterServicesBsCompare($bsArray)
+    {
+        // $dbUsers = bsUserAssignedCallcenter::all();
+        // foreach($dbUsers as $dbUser)
+        // {
+
+        //     $user = $dbUser->userId;
+        //     $callcenter = $dbUser->serviceUserId;
+
+        //     $check = array_search($user, array_column($bsArray,'userId'));
+        //     $check2 = array_search($callcenter, array_column($bsArray, 'serviceUserId'));
+        //     $ch1 = array(
+        //         'userId' => $dbUser->userId,
+        //         'serviceUserId' => $dbUser->serviceUserId,
+        //         'available' => $dbUser->available,
+        //         'skillLevel' => $dbUser->skillLevel,
+        //         'extension' => $dbUser->extension,
+        //         'userphoneNumberId' => $dbUser->phoneNumber,
+
+        //     );
+        //     $ch = in_array($ch1, $bsArray);
+        //     dd($ch);
+        //     // if(!in_array($dbUser->userId, $bsArray))
+        //     // {
+        //     //     dd($dbUser, $bsArray);
+        //     //     // bsUserAssignedCallcenter::where('userId', $user)->where('serviceUserId',$callcenter)->delete();
+        //     // }
+        // }
+        return True;
     }
 }

@@ -18,6 +18,7 @@ class ActionController extends Controller
     {
         $this->bsUser = $bsUser;
         $this->bsCallcenter = $bsCallCenter;
+        $this->default_user = env('BS_QRY_USER').'@'.Str::lower(env('BS_GROUP')).'.'.env('BS_FQDN');
     }
 
     private function RequestInit()
@@ -29,9 +30,16 @@ class ActionController extends Controller
         return $client;
     }
 
-    private function RequestAction($cmd, $startIndex=1)
+    private function RequestAction($cmd, $startIndex=1, $user=NULL)
     {
-        $uri = '/'.env('BS_ACTION_PREFIX').'/v2.0/user/'.env('BS_QRY_USER').'@'.Str::lower(env('BS_GROUP')).'.'.env('BS_FQDN'). $cmd .'&start='.$startIndex;
+        if(!$user){$user=$this->default_user;}
+        if($startIndex > 1){
+            $uri = '/'.env('BS_ACTION_PREFIX').'/v2.0/user/'.$user. $cmd .'&start='.$startIndex;
+        }
+        else{
+            $uri = '/'.env('BS_ACTION_PREFIX').'/v2.0/user/'.$user. $cmd;
+        }
+        
         return $uri;
             
     }
@@ -52,46 +60,53 @@ class ActionController extends Controller
         return $response;
     }
 
-    public function GetCallCenters()
-    {
-        $callCenterArray = array();
-        $base = $this->RequestInit();
-        $uri = $this->RequestAction('/directories/group?format=json&firstName=Call%20Center'); // This request gets only callcenters bases on the Firstname
-        $response = $this->RequestResponse($base,$uri);
-        $data = json_decode($response->getBody(), true);
-        $startIndex = $data['Group']['startIndex']['$'];
-        $numberOfRecords = $data['Group']['numberOfRecords']['$'];
-        $totalAvailableRecords = $data['Group']['totalAvailableRecords']['$'];
-        $parsedRecords = $startIndex+$numberOfRecords;
-        $users = $data['Group']['groupDirectory']['directoryDetails'];
-        foreach($users as $user)
-        {
-            array_push($callCenterArray, $user);
-        }
+    // public function GetCallCenters()
+    // {
+    //     $callCenterArray = array();
+    //     $base = $this->RequestInit();
+    //     $uri = $this->RequestAction('/directories/group?format=json&firstName=Call%20Center'); // This request gets only callcenters bases on the Firstname
+    //     $response = $this->RequestResponse($base,$uri);
+    //     $data = json_decode($response->getBody(), true);
+    //     $startIndex = $data['Group']['startIndex']['$'];
+    //     $numberOfRecords = $data['Group']['numberOfRecords']['$'];
+    //     $totalAvailableRecords = $data['Group']['totalAvailableRecords']['$'];
+    //     $parsedRecords = $startIndex+$numberOfRecords;
+    //     $users = $data['Group']['groupDirectory']['directoryDetails'];
+    //     foreach($users as $user)
+    //     {
+    //         array_push($callCenterArray, $user);
+    //     }
 
-        while($parsedRecords <= $totalAvailableRecords){ 
-            $base = $this->RequestInit();
-            $uri = $this->RequestAction('/directories/group?format=json', $parsedRecords);
-            $response = $this->RequestResponse($base,$uri);
-            $data = json_decode($response->getBody(), true);
-            $startIndex = $data['Group']['startIndex']['$'];
-            $numberOfRecords = $data['Group']['numberOfRecords']['$'];
-            $totalAvailableRecords = $data['Group']['totalAvailableRecords']['$'];
-            $users = $data['Group']['groupDirectory']['directoryDetails'];
-            foreach($users as $user)
-            {
-                array_push($callCenterArray, $user);
-            }
-            $parsedRecords +=$numberOfRecords;
-        }
-        $this->bsCallcenter->SaveToDB($callCenterArray);
-        return response()->json($callCenterArray);
-    }
+    //     while($parsedRecords <= $totalAvailableRecords){ 
+    //         $base = $this->RequestInit();
+    //         $uri = $this->RequestAction('/directories/group?format=json', $parsedRecords);
+    //         $response = $this->RequestResponse($base,$uri);
+    //         $data = json_decode($response->getBody(), true);
+    //         $startIndex = $data['Group']['startIndex']['$'];
+    //         $numberOfRecords = $data['Group']['numberOfRecords']['$'];
+    //         $totalAvailableRecords = $data['Group']['totalAvailableRecords']['$'];
+    //         $users = $data['Group']['groupDirectory']['directoryDetails'];
+    //         foreach($users as $user)
+    //         {
+    //             array_push($callCenterArray, $user);
+    //         }
+    //         $parsedRecords +=$numberOfRecords;
+    //     }
+    //     $this->bsCallcenter->SaveToDB($callCenterArray);
+    //     return response()->json($callCenterArray);
+    // }
 
     public function GetUsers()
     {
-        $blacklist = explode(',', env('BS_USER_BLACKLIST'));
+        $blacklist = explode(',', env('BS_USERID_BLACKLIST'));
         $accepted_domains = explode(',',env('BS_ACCEPTED_DOMAINS'));
+        $blacklistFirstNames = array(
+            "FAX",
+            "Hunt Group",
+            "Meet-Me Conferencing",
+            "Voice Messaging Group",
+            "Auto Attendant"
+        );
         $userArray = array();
         $callCenterArray = array();
         $base = $this->RequestInit();
@@ -113,14 +128,15 @@ class ActionController extends Controller
                     {
                         if($user['firstName']['$'] == "Call Center")
                         {
-                            if(isset($user['additionalDetails']['department']))
-                            {
+                            // if(isset($user['additionalDetails']['department']))
+                            // {
                                 array_push($callCenterArray, $user);
-                            }
+                            // }
                         }
                         else
                         {
-                            if(isset($user['additionalDetails']['department']))
+                            // if(isset($user['additionalDetails']['department']))
+                            if(!in_array($user['firstName']['$'], $blacklistFirstNames))
                             {
                                 array_push($userArray, $user);
                             }
@@ -158,7 +174,10 @@ class ActionController extends Controller
                             {
                                 if(isset($user['extension']))
                                 {
-                                    array_push($userArray, $user);
+                                    if(!in_array($user['firstName']['$'], $blacklistFirstNames))
+                                    {
+                                        array_push($userArray, $user);
+                                    }
                                 }
                             }
                         }
@@ -168,9 +187,72 @@ class ActionController extends Controller
             $parsedRecords +=$numberOfRecords;
         }
 
-        $this->bsUser->SaveToDB($userArray);
-        $this->bsCallcenter->SaveToDB($callCenterArray);
-        $this->bsUser->UserdbCompare($userArray);
-        return response()->json($userArray);
+        $this->bsUser->SaveToDB($userArray); // inserts users to the database
+        $this->bsCallcenter->SaveToDB($callCenterArray); //inserts callcenters into the database.
+        $this->bsUser->UserdbCompare($userArray); //compares users in the db vs from broadsoft, and deletes the ones missing
+        return response()->json($userArray); // returns json response with user accounts
+        // return "I have proccessed all user accounts";
+    }
+
+    public function GetUserCallCenterServices()
+    {
+        $users = $this->bsUser->GetAllUsers();
+        $bs_user_assigned_callcenters = array();
+        foreach($users as $user)
+        {
+            try
+            {
+                $base = $this->RequestInit();
+                $uri = $this->RequestAction('/services/callcenter?format=json', 0, $user->userId); // Gets all users from the group directory
+                $response = $this->RequestResponse($base,$uri);
+                $data = json_decode($response->getBody(), true);
+            }
+            catch (\GuzzleHttp\Exception\RequestException $e)
+            {
+                // dd("invalid account ");
+            }
+            // 
+            if(isset($data))
+            {
+                $acdState = $data['CallCenter']['agentACDState']['$'];
+                $callcenterList = $data['CallCenter']['callCenterList'];
+                foreach($callcenterList as $callcenterItem)
+                {
+                    foreach($callcenterItem as $callcenter)
+                    {
+                        if(isset($callcenter['serviceUserId']))
+                        {
+
+                            
+                            $serviceUserId = $callcenter['serviceUserId']['$'];
+                            $available = $callcenter['available']['$'];
+                            // $extension = $callcenter['callCenterDetails']['extension']['$'];
+                            if(isset($callcenter['extension'])){$extension =$callcenter['extension']['$'];}else{$extension=NULL;}
+                            // $phoneNumber = $callcenter['callCenterDetails']['phoneNumber']['$'];
+                            if(isset($callcenter['phoneNumber'])){$phoneNumber=$callcenter['phoneNumber']['$'];}else{$phoneNumber=NULL;}
+                            // $skillLevel = $callcenter['skillLevel']['$'];
+                            if(isset($callcenter['skillLevel'])){$skillLevel=$callcenter['skillLevel']['$'];}else{$skillLevel=NULL;}
+                            $userId = $user->userId;
+
+                            array_push($bs_user_assigned_callcenters, array(
+                                'serviceUserId' => $serviceUserId,
+                                'available' => (bool)$available,
+                                'extension' => (int)$extension,
+                                'phoneNumber' => $phoneNumber,
+                                'skillLevel' => (int)$skillLevel,
+                                'userId' => $userId
+                            ));
+                        }
+                    }
+                    
+                }
+                
+                
+            }
+        }
+        $this->bsUser->SaveUserCallCenterServices($bs_user_assigned_callcenters);
+        $this->bsUser->CallCenterServicesBsCompare($bs_user_assigned_callcenters);// moet nog verder uitgewerkt worden.
+        // return $bs_user_assigned_callcenters;
+        return "I have processed all user services for all available users";
     }
 }
