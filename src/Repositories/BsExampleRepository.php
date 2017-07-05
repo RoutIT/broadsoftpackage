@@ -19,9 +19,9 @@ class BsExampleRepository implements BsExampleInterface
         $userArray= array();
         foreach($callcenters as $callcenter)
         {
-            $users = bsUserAssignedCallcenter::with('bsUser')->where('serviceUserID', $callcenter->userId)->where('available', true)->get();
+            $users = bsUserAssignedCallcenter::with('bsUser')->where('serviceUserID', $callcenter->userId)->get();
+            array_push($userArray, $users);
         }
-        array_push($userArray, $users);
         return $userArray[0];
     }
 }

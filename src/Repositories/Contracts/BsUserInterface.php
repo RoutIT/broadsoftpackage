@@ -9,5 +9,5 @@ interface BsUserInterface
     function GetAllUsers();
     function SaveUserCallCenterServices($CallCenterServicesArray);
     function CallCenterServicesBsCompare($bsArray);
-
+    function SetAcdState($userId, $acdState);
 } 

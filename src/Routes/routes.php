@@ -20,6 +20,6 @@ Route::group(['prefix' => 'bs'], function () {
 
 
     Route::group(['prefix' => 'example'], function () {
-        Route::get('callcenter/{slug}', 'jvleeuwen\broadsoft\Controllers\ExampleController@Callcenter');
+        Route::get('agents/{slug}', 'jvleeuwen\broadsoft\Controllers\ExampleController@Agents');
     });
 });

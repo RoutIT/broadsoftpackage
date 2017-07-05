@@ -16,13 +16,13 @@ class ExampleController extends Controller
         $this->bsExample = $bsExample;
     }
 
-    public function Callcenter($slug)
+    public function Agents($slug)
     {
         $data = array(
             'slug' => (string)$slug,
             'callcenters' => $this->bsExample->GetCallCentersBySlug($slug),
             'users' => $this->bsExample->GetUsersBySlug($slug),
         );
-        return view('broadsoft::bs.example.callcenter', $data);
+        return view('broadsoft::bs.example.agents', $data);
     }
 }

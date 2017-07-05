@@ -133,32 +133,13 @@ class BsUserRepository implements BsUserInterface
 
     public function CallCenterServicesBsCompare($bsArray)
     {
-        // $dbUsers = bsUserAssignedCallcenter::all();
-        // foreach($dbUsers as $dbUser)
-        // {
-
-        //     $user = $dbUser->userId;
-        //     $callcenter = $dbUser->serviceUserId;
-
-        //     $check = array_search($user, array_column($bsArray,'userId'));
-        //     $check2 = array_search($callcenter, array_column($bsArray, 'serviceUserId'));
-        //     $ch1 = array(
-        //         'userId' => $dbUser->userId,
-        //         'serviceUserId' => $dbUser->serviceUserId,
-        //         'available' => $dbUser->available,
-        //         'skillLevel' => $dbUser->skillLevel,
-        //         'extension' => $dbUser->extension,
-        //         'userphoneNumberId' => $dbUser->phoneNumber,
-
-        //     );
-        //     $ch = in_array($ch1, $bsArray);
-        //     dd($ch);
-        //     // if(!in_array($dbUser->userId, $bsArray))
-        //     // {
-        //     //     dd($dbUser, $bsArray);
-        //     //     // bsUserAssignedCallcenter::where('userId', $user)->where('serviceUserId',$callcenter)->delete();
-        //     // }
-        // }
         return True;
+    }
+
+    public function SetAcdState($userId, $acdState)
+    {
+        $user = bsUser::where('userId', $userId)->first();
+        $user->acdState = $acdState;
+        return $user->save();
     }
 }

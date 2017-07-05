@@ -8,6 +8,6 @@ class bsUserAssignedCallcenter extends Model
 {
     public function bsUser()
     {
-        return $this->hasOne('jvleeuwen\broadsoft\Database\Models\bsUser', 'userId', 'userId');
+        return $this->hasOne('jvleeuwen\broadsoft\Database\Models\bsUser','userId', 'userId');
     }
 }
