@@ -26,7 +26,7 @@
     </head>
     <body>
         <div id="wrapper">
-                 <div class="col-md-12">      
+                 <div class="col-md-6">      
                     <div id="row">
                     <h1>Agents example for slug: {{$slug}}</h1>
 
