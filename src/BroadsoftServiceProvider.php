@@ -3,7 +3,6 @@
 namespace jvleeuwen\broadsoft;
 
 use Illuminate\Support\ServiceProvider;
-
 class BroadsoftServiceProvider extends ServiceProvider
 {
     /**
@@ -39,5 +38,6 @@ class BroadsoftServiceProvider extends ServiceProvider
         $this->app->make('jvleeuwen\broadsoft\Controllers\DebugController');
         $this->app->make('jvleeuwen\broadsoft\Controllers\ActionController');
         $this->app->make('jvleeuwen\broadsoft\Controllers\ExampleController');
+        $this->app->make('jvleeuwen\broadsoft\Controllers\EmailController');
     }
 }

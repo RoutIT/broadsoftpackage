@@ -4,17 +4,27 @@ namespace jvleeuwen\broadsoft\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use jvleeuwen\broadsoft\Events\CallCenterAgentEvent;
+use jvleeuwen\broadsoft\Repositories\Contracts\BsUserInterface;
+use jvleeuwen\broadsoft\Controllers\EmailController;
 
 class CallCenterAgentController extends Controller
 {
+    public function __construct(BsUserInterface $bsUser, EmailController $email)
+    {
+        $this->bsUser = $bsUser;
+        $this->email = $email;
+    }
     /*
         Handle incomming XML messages for the Call Center Agent
     */
+
     public function Incomming(Request $request)
     {
     	$req = $request->getContent();
         $xml = simplexml_load_string($req, null, 0, 'xsi', true);
+        Log::debug($req);
         return $this->GetEventType($xml);
 
     }
@@ -38,6 +48,7 @@ class CallCenterAgentController extends Controller
                 'data' => json_decode(json_encode($xml)),
                 'trace' => (string)$e
             );
+            $this->email->sendDebug( __CLASS__, $type, json_encode($xml), (string)$e);
             return json_encode($data);
             
             # implement logging here, so a log file will be genereated and these kind of events can be converted to methods.
@@ -81,6 +92,7 @@ class CallCenterAgentController extends Controller
             "averageWrapUpTime" => (int)$xml->eventData->agentStateInfo->averageWrapUpTime->value
         );
         event(new CallCenterAgentEvent($AgentStateEvent));
+        $this->bsUser->SetAcdState((string)$xml->targetId, (string)$xml->eventData->agentStateInfo->state);
         return Null;
     }
 
