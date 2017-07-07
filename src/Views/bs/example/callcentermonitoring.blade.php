@@ -59,7 +59,7 @@
                     <h1>Agents example for slug: {{$slug}}</h1>
 
                     <div id='bs'>
-                        <exampleagents agents="{{ json_encode($users) }}"></exampleagents>
+                        <examplecallcentermonitoring agents="{{ json_encode($users) }}"></examplecallcentermonitoring>
                     </div>
                 </div>
             </div>

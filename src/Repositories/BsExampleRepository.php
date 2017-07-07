@@ -14,6 +14,11 @@ class BsExampleRepository implements BsExampleInterface
         return bsCallcenter::where('slug', $slug)->get();
     }
 
+    public function GetCallCenterMonitoringBySlug($slug)
+    {
+        return bsCallcenterMonitoring::where('slug', $slug)->get();
+    }
+
     public function GetUsersBySlug($slug)
     {
         // $callcenters = $this->GetCallCentersBySlug($slug);

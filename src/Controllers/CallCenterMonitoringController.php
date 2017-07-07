@@ -6,14 +6,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use jvleeuwen\broadsoft\Events\CallCenterMonitoringEvent;
 use jvleeuwen\broadsoft\Controllers\EmailController;
+use jvleeuwen\broadsoft\Repositories\Contracts\BsCallCenterMonitoringInterface;
 
 class CallCenterMonitoringController extends Controller
 {
 
-    public function __construct(EmailController $email)
+    public function __construct(EmailController $email, BsCallCenterMonitoringInterface $bsCallcenterMonitoring)
     {
         $this->email = $email;
+        $this->bsCallcenterMonitoring = $bsCallcenterMonitoring;
     }
+
     /*
         Handle incomming XML messages for the Call Center Agent
     */
@@ -70,6 +73,7 @@ class CallCenterMonitoringController extends Controller
             "numStaffedAgentsIdle" => (int)$xml->eventData->monitoringStatus->numStaffedAgentsIdle,
             "numStaffedAgentsUnavailable" => (int)$xml->eventData->monitoringStatus->numStaffedAgentsUnavailable
         );
+        $this->bsCallcenterMonitoring->SaveToDB($CallCenterMonitoringEvent);
         event(new CallCenterMonitoringEvent($CallCenterMonitoringEvent));
         return Null;
     }
