@@ -23,6 +23,6 @@ Route::group(['prefix' => 'bs'], function () {
     Route::get('example', 'jvleeuwen\broadsoft\Controllers\ExampleController@Index');
     Route::group(['prefix' => 'example'], function () {
         Route::get('agents/{slug}', 'jvleeuwen\broadsoft\Controllers\ExampleController@Agents');
-        Route::get('callcentermonitoring/{slug}', 'jvleeuwen\broadsoft\Controllers\ExampleController@CallCenterMonitoring');
+        Route::get('callcentermonitoring', 'jvleeuwen\broadsoft\Controllers\ExampleController@CallCenterMonitoring');
     });
 });

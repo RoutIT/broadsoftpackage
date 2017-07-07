@@ -6,6 +6,7 @@ use jvleeuwen\broadsoft\Repositories\Contracts\BsExampleInterface;
 use jvleeuwen\broadsoft\Database\Models\bsCallcenter;
 use jvleeuwen\broadsoft\Database\Models\bsUserAssignedCallcenter;
 use jvleeuwen\broadsoft\Database\Models\bsUser;
+use jvleeuwen\broadsoft\Database\Models\bsCallcenterMonitoring;
 
 class BsExampleRepository implements BsExampleInterface
 {
@@ -14,9 +15,9 @@ class BsExampleRepository implements BsExampleInterface
         return bsCallcenter::where('slug', $slug)->get();
     }
 
-    public function GetCallCenterMonitoringBySlug($slug)
+    public function GetCallCenterMonitoring()
     {
-        return bsCallcenterMonitoring::where('slug', $slug)->get();
+        return bsCallcenterMonitoring::all();
     }
 
     public function GetUsersBySlug($slug)

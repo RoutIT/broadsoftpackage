@@ -9,7 +9,6 @@ class BsCallCenterMonitoringRepository implements BsCallCenterMonitoringInterfac
 {
     public function SaveToDB($CallCenterMonitoringArray)
     {
-        // dd($CallCenterMonitoringArray);
         $targetId = (string)$CallCenterMonitoringArray['targetId'];
         $averageHandlingTime = (int)$CallCenterMonitoringArray['averageHandlingTime'];
         $expectedWaitTime = (int)$CallCenterMonitoringArray['expectedWaitTime'];
@@ -51,8 +50,6 @@ class BsCallCenterMonitoringRepository implements BsCallCenterMonitoringInterfac
             $ExistingCallCenter->numStaffedAgentsUnavailable = $numStaffedAgentsUnavailable;
             $ExistingCallCenter->save();
         }
-
-
         return True;
     }
 }

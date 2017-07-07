@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Example:Callcenter:{{$slug}}</title>
+        <title>Example:Callcenter Monitoring}</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link href="{{ mix('css/app.css') }}" rel="stylesheet"></link>
         <style>
@@ -54,12 +54,12 @@
                             </div>
                         </nav>
                 </div>
-                 <div class="col-md-6">      
+                 <div class="col-md-12">      
                     <div id="row">
-                    <h1>Agents example for slug: {{$slug}}</h1>
+                    <h1>Callcenter Monitoring Example:</h1>
 
                     <div id='bs'>
-                        <examplecallcentermonitoring agents="{{ json_encode($users) }}"></examplecallcentermonitoring>
+                        <examplecallcentermonitoring callcenters="{{ json_encode($callcenters) }}"></examplecallcentermonitoring>
                     </div>
                 </div>
             </div>

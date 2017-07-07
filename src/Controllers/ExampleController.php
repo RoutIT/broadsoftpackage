@@ -35,12 +35,10 @@ class ExampleController extends Controller
         return view('broadsoft::bs.example.agents', $data);
     }
 
-    public function CallCenterMonitoring($slug)
+    public function CallCenterMonitoring()
     {
         $data = array(
-            'slug' => (string)$slug,
-            'callcenters' => $this->bsExample->GetCallCentersBySlug($slug),
-            'users' => $this->bsExample->GetUsersBySlug($slug),
+            'callcenters' => $this->bsExample->GetCallCenterMonitoring(),
             'routes' => Route::getRoutes()->get()
         );
         return view('broadsoft::bs.example.callcentermonitoring', $data);
