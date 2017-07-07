@@ -50,7 +50,7 @@ class CallCenterMonitoringController extends Controller
     }
 
     /*
-        Parse ACD Call Abandoned Events
+        Parse CallCenter Monitoring Events
     */
     protected function CallCenterMonitoringEvent($xml)
     {
@@ -71,6 +71,24 @@ class CallCenterMonitoringController extends Controller
             "numStaffedAgentsUnavailable" => (int)$xml->eventData->monitoringStatus->numStaffedAgentsUnavailable
         );
         event(new CallCenterMonitoringEvent($CallCenterMonitoringEvent));
+        return Null;
+    }
+
+    /*
+        Parse CallCenter Monitoring Events
+    */
+    protected function SubscriptionTerminatedEvent($xml)
+    {
+        $SubscriptionTerminatedEvent = array(
+            "eventType" => (string)"SubscriptionTerminatedEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "userId" => (string)$xml->userId,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "externalApplicationId" => (string)$xml->externalApplicationId,
+            "httpContact" => (string)$xml->httpContact->uri
+        );
+        event(new CallCenterMonitoringEvent($SubscriptionTerminatedEvent));
         return Null;
     }
 }
