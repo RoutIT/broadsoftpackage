@@ -39,4 +39,12 @@ class DebugController extends Controller
         );
         return view('broadsoft::bs.debug.advancedcall', $data);
     }
+
+    public function CallCenterMonitoringEvent()
+    {
+        $data = array(
+            'routes' => Route::getRoutes()->get()
+        );
+        return view('broadsoft::bs.debug.callcentermonitoring', $data);
+    }
 }

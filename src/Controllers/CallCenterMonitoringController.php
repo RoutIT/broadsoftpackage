@@ -4,13 +4,13 @@ namespace jvleeuwen\broadsoft\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use jvleeuwen\broadsoft\Events\CallCenterAgentEvent;
+use jvleeuwen\broadsoft\Events\CallCenterMonitoringEvent;
 use jvleeuwen\broadsoft\Controllers\EmailController;
 
 class CallCenterMonitoringController extends Controller
 {
 
-    public function __construct($bsUser, EmailController $email)
+    public function __construct(EmailController $email)
     {
         $this->email = $email;
     }
@@ -21,13 +21,13 @@ class CallCenterMonitoringController extends Controller
     {
     	$req = $request->getContent();
         $xml = simplexml_load_string($req, null, 0, 'xsi', true);
-        return $this->GetEventType($xml);
+        return $this->GetEventType($xml, $req);
     }
 
     /*
         Get the event type from xml data
     */
-    protected function GetEventType($xml)
+    protected function GetEventType($xml, $req)
     {
         $type = str_replace('xsi:','', (string)$xml->eventData[0]->attributes('xsi1', true)->type);
 
@@ -43,10 +43,34 @@ class CallCenterMonitoringController extends Controller
                 'data' => json_decode(json_encode($xml)),
                 'trace' => (string)$e
             );
-            $this->email->sendDebug( __CLASS__, $type, json_encode($xml), (string)$e);
-            return json_encode($data);
-            
-            # implement logging here, so a log file will be genereated and these kind of events can be converted to methods.
+            $this->email->sendDebug( __CLASS__, $type, json_encode($xml), (string)$e, $req);
+            // return json_encode($data);
+            return Null;
         }
+    }
+
+    /*
+        Parse ACD Call Abandoned Events
+    */
+    protected function CallCenterMonitoringEvent($xml)
+    {
+        $CallCenterMonitoringEvent = array(
+            "eventType" => (string)"CallCenterMonitoringEvent",
+            "eventID" => (string)$xml->eventID,
+            "sequenceNumber" => (int)$xml->sequenceNumber,
+            "subscriptionId" => (string)$xml->subscriptionId,
+            "targetId" => (string)$xml->targetId,
+            "averageHandlingTime" => (int)$xml->eventData->monitoringStatus->averageHandlingTime->value,
+            "expectedWaitTime" => (int)$xml->eventData->monitoringStatus->expectedWaitTime->value,
+            "averageSpeedOfAnswer" => (int)$xml->eventData->monitoringStatus->averageSpeedOfAnswer->value,
+            "longestWaitTime" => (int)$xml->eventData->monitoringStatus->longestWaitTime->value,
+            "numCallsInQueue" => (int)$xml->eventData->monitoringStatus->numCallsInQueue->value,
+            "numAgentsAssigned" => (int)$xml->eventData->monitoringStatus->numAgentsAssigned,
+            "numAgentsStaffed" => (int)$xml->eventData->monitoringStatus->numAgentsStaffed,
+            "numStaffedAgentsIdle" => (int)$xml->eventData->monitoringStatus->numStaffedAgentsIdle,
+            "numStaffedAgentsUnavailable" => (int)$xml->eventData->monitoringStatus->numStaffedAgentsUnavailable
+        );
+        event(new CallCenterMonitoringEvent($CallCenterMonitoringEvent));
+        return Null;
     }
 }

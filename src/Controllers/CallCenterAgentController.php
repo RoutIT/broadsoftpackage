@@ -25,14 +25,14 @@ class CallCenterAgentController extends Controller
     	$req = $request->getContent();
         $xml = simplexml_load_string($req, null, 0, 'xsi', true);
         Log::debug($req);
-        return $this->GetEventType($xml);
+        return $this->GetEventType($xml, $req);
 
     }
 
     /*
         Get the event type from xml data
     */
-    protected function GetEventType($xml)
+    protected function GetEventType($xml, $req)
     {
         $type = str_replace('xsi:','', (string)$xml->eventData[0]->attributes('xsi1', true)->type);
 
@@ -48,7 +48,7 @@ class CallCenterAgentController extends Controller
                 'data' => json_decode(json_encode($xml)),
                 'trace' => (string)$e
             );
-            $this->email->sendDebug( __CLASS__, $type, json_encode($xml), (string)$e);
+            $this->email->sendDebug( __CLASS__, $type, json_encode($xml), (string)$e, $req);
             return json_encode($data);
             
             # implement logging here, so a log file will be genereated and these kind of events can be converted to methods.

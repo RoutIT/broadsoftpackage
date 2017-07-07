@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Mail;
 
 class EmailController extends Controller
 {
-    public function SendDebug($class, $method, $data, $trace)
+    public function SendDebug($class, $method, $data, $trace, $req)
     {
-        Mail::send('broadsoft::mail.debug', ['class' => $class, 'method'=>$method, 'data'=> $data, 'trace'=> $trace], function ($message)
+        Mail::send('broadsoft::mail.debug', ['class' => $class, 'method'=>$method, 'data'=> $data, 'trace'=> $trace, 'request' => $req], function ($message)
         {
             $message->from('noreply@broadsoftpackage.com', 'noreply@broadsoftpackage.com');
             $message->to(env('BS_CONTACT_MAIL'));

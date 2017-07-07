@@ -34,6 +34,7 @@ class BroadsoftServiceProvider extends ServiceProvider
         $this->app->bind('jvleeuwen\broadsoft\Repositories\Contracts\BsExampleInterface','jvleeuwen\broadsoft\Repositories\BsExampleRepository');
         $this->app->make('jvleeuwen\broadsoft\Controllers\CallCenterAgentController');
         $this->app->make('jvleeuwen\broadsoft\Controllers\CallCenterQueueController');
+        $this->app->make('jvleeuwen\broadsoft\Controllers\CallCenterMonitoringController');
         $this->app->make('jvleeuwen\broadsoft\Controllers\AdvancedCallController');
         $this->app->make('jvleeuwen\broadsoft\Controllers\DebugController');
         $this->app->make('jvleeuwen\broadsoft\Controllers\ActionController');
